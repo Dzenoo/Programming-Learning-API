@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const HttpError = require("./models/HttpError");
 const UserRoutes = require("./routes/UserRoutes");
 const ChallengeRoutes = require("./routes/ChallengeRoutes");
+const BlogRoutes = require("./routes/BlogRoutes");
 
 const PORT = 8000;
 const app = express();
@@ -11,6 +12,7 @@ app.use(bodyParser.json());
 
 app.use("/api/users", UserRoutes);
 app.use("/api/challenges", ChallengeRoutes);
+app.use("/api/blog", BlogRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route.", 404);
