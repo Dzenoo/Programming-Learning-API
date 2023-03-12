@@ -1,4 +1,5 @@
 const express = require("express");
+const { check } = require("express-validator");
 const {
   NewBlog,
   DeleteBlog,
@@ -8,7 +9,16 @@ const {
 
 const router = express.Router();
 
-router.post("/new", NewBlog);
+router.post(
+  "/new",
+  [
+    check("title").not().isEmpty(),
+    check("date").not().isEmpty(),
+    check("description").not().isEmpty(),
+    check("details").not().isEmpty(),
+  ],
+  NewBlog
+);
 
 router.delete("/:bid", DeleteBlog);
 
