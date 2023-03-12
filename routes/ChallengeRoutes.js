@@ -7,7 +7,14 @@ const {
   startChallenge,
 } = require("../controllers/ChallengeContollers");
 const { check } = require("express-validator");
+const checkAuth = require("../middlewares/CheckAuth");
 const router = express.Router();
+
+router.get("/", GetChallenges);
+
+router.get("/:cid", GetChallengeById);
+
+router.use(checkAuth);
 
 router.post("/:uId/:cId/start", startChallenge);
 
@@ -23,9 +30,5 @@ router.post(
 );
 
 router.delete("/:cid", DeleteChallenge);
-
-router.get("/", GetChallenges);
-
-router.get("/:cid", GetChallengeById);
 
 module.exports = router;

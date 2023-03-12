@@ -84,7 +84,6 @@ exports.CreateChallenge = async (req, res, next) => {
     xp,
     acceptableFiles,
     listOfSteps,
-    userId: "",
   });
 
   try {

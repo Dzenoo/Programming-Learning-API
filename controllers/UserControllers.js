@@ -13,19 +13,22 @@ exports.signup = async (req, res, next) => {
     );
   }
 
-  const { first_name, last_name, user_name, email, password, number, level } =
+  const { first_name, last_name, user_name, email, password, number } =
     req.body;
 
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
   } catch (err) {
-    const error = new HttpError("Could not signup, please try again later");
+    const error = new HttpError(
+      "Could not signup, please try again later",
+      500
+    );
     return next(error);
   }
 
   if (existingUser) {
-    const error = new HttpError("Users exist already");
+    const error = new HttpError("Users exist already", 422);
     return next(error);
   }
 
@@ -46,7 +49,7 @@ exports.signup = async (req, res, next) => {
     number,
     image:
       "https://res.cloudinary.com/dzwb60tk1/image/upload/v1678535834/Untitled_design_3_zbm2cx.png",
-    level,
+    level: 0,
     challenges: [],
   });
 
@@ -97,7 +100,7 @@ exports.login = async (req, res, next) => {
   if (!existingUser) {
     const error = new HttpError(
       "Invalid credentials, could not log you in.",
-      401
+      403
     );
     return next(error);
   }
@@ -116,7 +119,7 @@ exports.login = async (req, res, next) => {
   if (!isPasswordValid) {
     const error = new HttpError(
       "Could not log you in please check credentials.",
-      500
+      403
     );
     return next(error);
   }

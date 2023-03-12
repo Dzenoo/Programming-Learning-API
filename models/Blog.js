@@ -9,5 +9,4 @@ const BlogSchema = new Schema({
   description: { type: "String", required: true },
   details: { type: "String", required: true },
 });
-
 module.exports = mongoose.model("Blog", BlogSchema);
