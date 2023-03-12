@@ -3,7 +3,7 @@ const UserControllers = require("../controllers/UserControllers");
 const { check } = require("express-validator");
 const router = express.Router();
 
-router.get("/:userId/profile");
+router.get("/:userId/profile", UserControllers.getProfile);
 
 router.post(
   "/signup",
