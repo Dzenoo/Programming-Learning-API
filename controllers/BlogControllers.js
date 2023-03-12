@@ -23,7 +23,19 @@ exports.NewBlog = async (req, res, next) => {
   res.status(200).json({ blog: createdBlog });
 };
 
-exports.DeleteBlog = async (req, res, next) => {};
+exports.DeleteBlog = async (req, res, next) => {
+  const blogId = req.params.bid;
+
+  let deletedBlog;
+  try {
+    deletedBlog = await Blog.findByIdAndDelete(blogId);
+  } catch (err) {
+    const error = new HttpError("Deleting blog failed, please try again.", 500);
+    return next(error);
+  }
+
+  res.status(200).json({ deletedBlog: deletedBlog });
+};
 
 exports.GetBlogs = async (req, res, next) => {};
 
