@@ -1,5 +1,10 @@
 const express = require("express");
-const { CreateChallenge } = require("../controllers/ChallengeContollers");
+const {
+  CreateChallenge,
+  DeleteChallenge,
+  GetChallenges,
+  GetChallengeById,
+} = require("../controllers/ChallengeContollers");
 const { check } = require("express-validator");
 const router = express.Router();
 
@@ -13,5 +18,11 @@ router.post(
   ],
   CreateChallenge
 );
+
+router.delete("/:cid", DeleteChallenge);
+
+router.get("/", GetChallenges);
+
+router.get("/:cid", GetChallengeById);
 
 module.exports = router;
