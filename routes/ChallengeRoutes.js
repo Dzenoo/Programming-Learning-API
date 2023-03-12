@@ -4,9 +4,12 @@ const {
   DeleteChallenge,
   GetChallenges,
   GetChallengeById,
+  startChallenge,
 } = require("../controllers/ChallengeContollers");
 const { check } = require("express-validator");
 const router = express.Router();
+
+router.post("/:uId/:cId/start", startChallenge);
 
 router.post(
   "/create",

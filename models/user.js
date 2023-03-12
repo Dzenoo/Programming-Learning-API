@@ -10,6 +10,8 @@ const UserSchema = new Schema({
   password: { type: "String", required: true },
   number: { type: "Number", required: true },
   image: { type: "String", required: true },
+  level: { type: "Number", required: true },
+  challenges: [{ type: Schema.Types.ObjectId, ref: "Challenge" }],
 });
 
 module.exports = mongoose.model("User", UserSchema);

@@ -1,4 +1,3 @@
-const express = require("express");
 const { default: mongoose } = require("mongoose");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
@@ -14,7 +13,7 @@ exports.signup = async (req, res, next) => {
     );
   }
 
-  const { first_name, last_name, user_name, email, password, number } =
+  const { first_name, last_name, user_name, email, password, number, level } =
     req.body;
 
   let existingUser;
@@ -47,6 +46,8 @@ exports.signup = async (req, res, next) => {
     number,
     image:
       "https://res.cloudinary.com/dzwb60tk1/image/upload/v1678535834/Untitled_design_3_zbm2cx.png",
+    level,
+    challenges: [],
   });
 
   try {
@@ -140,4 +141,26 @@ exports.login = async (req, res, next) => {
     email: existingUser.email,
     token: token,
   });
+};
+
+exports.getProfile = async (req, res, next) => {
+  const userId = req.params.userId;
+
+  let user;
+  try {
+    user = await User.findById(userId);
+  } catch (err) {
+    const error = new HttpError(
+      "Could not find user, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError("User is not found.", 404);
+    return next(error);
+  }
+
+  res.json({ user });
 };

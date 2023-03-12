@@ -1,6 +1,60 @@
 const { validationResult } = require("express-validator");
 const Challenge = require("../models/Challenge");
+const User = require("../models/user");
 const HttpError = require("../models/HttpError");
+
+exports.startChallenge = async (req, res, next) => {
+  const userId = req.params.uId;
+  const challengeId = req.params.cId;
+
+  let user;
+  try {
+    user = await User.findById(userId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not start challenge.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError("Could not find user for provided id.", 404);
+    return next(error);
+  }
+
+  let challenge;
+  try {
+    challenge = await Challenge.findById(challengeId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not start challenge.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!challenge) {
+    const error = new HttpError(
+      "Could not find challenge for provided id.",
+      404
+    );
+    return next(error);
+  }
+
+  user.challenges.push(challenge);
+  try {
+    await user.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not start challenge.",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(201).json({ message: "Challenge started!" });
+};
 
 exports.CreateChallenge = async (req, res, next) => {
   const errors = validationResult(req);
@@ -30,6 +84,7 @@ exports.CreateChallenge = async (req, res, next) => {
     xp,
     acceptableFiles,
     listOfSteps,
+    userId: "",
   });
 
   try {
