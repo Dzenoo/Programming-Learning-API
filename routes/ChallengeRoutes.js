@@ -5,6 +5,7 @@ const {
   GetChallenges,
   GetChallengeById,
   startChallenge,
+  GetChallengeByUserId,
 } = require("../controllers/ChallengeContollers");
 const { check } = require("express-validator");
 const checkAuth = require("../middlewares/CheckAuth");
@@ -12,9 +13,7 @@ const router = express.Router();
 
 router.get("/", GetChallenges);
 
-router.get("/:cid", GetChallengeById);
-
-router.use(checkAuth);
+// router.use(checkAuth);
 
 router.post("/:uId/:cId/start", startChallenge);
 

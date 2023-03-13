@@ -135,28 +135,3 @@ exports.GetChallenges = async (req, res, next) => {
     ),
   });
 };
-
-exports.GetChallengeById = async (req, res, next) => {
-  const chId = req.params.cid;
-
-  let challenge;
-  try {
-    challenge = await Challenge.findById(chId);
-  } catch (err) {
-    const error = new HttpError(
-      "Could not find challenge, please try again.",
-      500
-    );
-    return next(error);
-  }
-
-  if (!challenge) {
-    const error = new HttpError(
-      "Could not find challenge for this id, please try again.",
-      500
-    );
-    return next(error);
-  }
-
-  res.json({ challenge: challenge });
-};
