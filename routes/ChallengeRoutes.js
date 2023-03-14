@@ -3,7 +3,7 @@ const {
   CreateChallenge,
   DeleteChallenge,
   GetChallenges,
-  GetChallengeById,
+  getChallengeById,
   startChallenge,
   GetChallengeByUserId,
 } = require("../controllers/ChallengeContollers");
@@ -12,6 +12,8 @@ const checkAuth = require("../middlewares/CheckAuth");
 const router = express.Router();
 
 router.get("/", GetChallenges);
+
+router.get("/:cId", getChallengeById);
 
 // router.use(checkAuth);
 

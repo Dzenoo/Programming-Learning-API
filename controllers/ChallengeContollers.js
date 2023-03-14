@@ -42,6 +42,11 @@ exports.startChallenge = async (req, res, next) => {
     return next(error);
   }
 
+  if (user.challenges.includes(challengeId)) {
+    const error = new HttpError("Challenge is already started", 500);
+    return next(error);
+  }
+
   user.challenges.push(challenge);
   try {
     await user.save();
@@ -134,4 +139,29 @@ exports.GetChallenges = async (req, res, next) => {
       challenge.toObject({ getters: true })
     ),
   });
+};
+
+exports.getChallengeById = async (req, res, next) => {
+  const challengeId = req.params.cId;
+
+  let challenge;
+  try {
+    challenge = await Challenge.findById(challengeId);
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong, could not find challenge.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!challenge) {
+    const error = new HttpError(
+      "Could not find challenge for provided id.",
+      404
+    );
+    return next(error);
+  }
+
+  res.json(challenge);
 };

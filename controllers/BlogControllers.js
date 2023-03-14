@@ -9,11 +9,10 @@ exports.NewBlog = async (req, res, next) => {
     return next(error);
   }
 
-  const { title, date, description, details } = req.body;
+  const { title, date, description, details, image } = req.body;
 
   const createdBlog = new Blog({
-    image:
-      "https://res.cloudinary.com/dzwb60tk1/image/upload/v1676482330/Untitled_design_3_giwyy7.png",
+    image,
     title,
     date,
     description,
