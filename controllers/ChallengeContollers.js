@@ -168,7 +168,6 @@ exports.getChallengeById = async (req, res, next) => {
 };
 
 exports.submitChallenge = async (req, res, next) => {
-  const userId = req.params.userId;
   const { title, github_url, site_url, description } = req.body;
 
   const createdSubmittedChallenge = new SubmittedChallenge({
@@ -176,12 +175,12 @@ exports.submitChallenge = async (req, res, next) => {
     github_url,
     site_url,
     description,
-    submitter: userId,
+    submitter: req.userData.userId,
   });
 
   let user;
   try {
-    user = await User.findById(userId);
+    user = await User.findById(req.userData.userId);
   } catch (err) {
     const error = new HttpError(
       "Submitting challenge failed, please try again.",

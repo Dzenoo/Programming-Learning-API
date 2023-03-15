@@ -1,12 +1,11 @@
-const { default: mongoose } = require("mongoose");
-
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const SubmitSchema = new Schema({
-  title: { type: String, required: true },
-  github_url: { type: String, required: true },
-  site_url: { type: String, required: true },
-  description: { type: String, required: true },
+  title: { type: String },
+  github_url: { type: String },
+  site_url: { type: String },
+  description: { type: String },
   submitter: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
 });
 
