@@ -30,7 +30,16 @@ router.delete("/:cid", DeleteChallenge);
 
 router.use(checkAuth);
 
-router.post("/submit", submitChallenge);
+router.post(
+  "/submit",
+  [
+    check("title").not().isEmpty(),
+    check("github_url").isEmpty(),
+    check("site_url").not().isEmpty(),
+    check("description").not().isEmpty(),
+  ],
+  submitChallenge
+);
 
 router.post("/:uId/:cId/start", startChallenge);
 
