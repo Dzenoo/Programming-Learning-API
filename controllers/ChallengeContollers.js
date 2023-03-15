@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const Challenge = require("../models/Challenge");
 const User = require("../models/user");
+const SubmittedChallenge = require("../models/SubmittedChallenge");
 const HttpError = require("../models/HttpError");
 
 exports.startChallenge = async (req, res, next) => {
@@ -89,6 +90,7 @@ exports.CreateChallenge = async (req, res, next) => {
     xp,
     acceptableFiles,
     listOfSteps,
+    submissions: [],
   });
 
   try {
@@ -164,4 +166,54 @@ exports.getChallengeById = async (req, res, next) => {
   }
 
   res.json(challenge);
+};
+
+exports.SubmitChallenge = async (req, res, next) => {
+  const challengeId = req.params.cId;
+  const userId = req.params.uId;
+  const { github_url, site_url, description } = req.body;
+
+  let challenge;
+  try {
+    challenge = await Challenge.findById(challengeId);
+  } catch (err) {
+    const error = new HttpError(
+      "Could not find challenge for provided id.",
+      404
+    );
+    return next(error);
+  }
+
+  let user;
+  try {
+    user = await User.findById(userId);
+  } catch (err) {
+    const error = new HttpError("Could not find user for provided id.", 404);
+    return next(error);
+  }
+
+  const submittedChallenge = {
+    challenge: challenge._id,
+    user: user._id,
+    github_url,
+    site_url,
+    description,
+  };
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await SubmittedChallenge.create([submittedChallenge], { session });
+    user.submittedChallenges.push(submittedChallenge);
+    await user.save({ session });
+    await session.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(
+      "Could not submit challenge. Please try again.",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(201).json({ submittedChallenge: submittedChallenge });
 };

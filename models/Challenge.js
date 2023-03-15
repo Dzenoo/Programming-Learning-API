@@ -12,6 +12,9 @@ const ChallengeSchema = new Schema(
     xp: { type: "Number", required: "true" },
     acceptableFiles: [{ type: "String", required: "true" }],
     listOfSteps: [{ type: "String", required: "true" }],
+    submissions: [
+      { type: mongoose.Types.ObjectId, ref: "SubmittedChallenges" },
+    ],
   },
   { timestamps: true }
 );

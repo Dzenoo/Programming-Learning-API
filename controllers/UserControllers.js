@@ -51,6 +51,7 @@ exports.signup = async (req, res, next) => {
       "https://res.cloudinary.com/dzwb60tk1/image/upload/v1678535834/Untitled_design_3_zbm2cx.png",
     level: 0,
     challenges: [],
+    submittedChallenges: [],
   });
 
   try {
