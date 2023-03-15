@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const Challenge = require("../models/Challenge");
 const User = require("../models/user");
+const SubmittedChallenge = require("../models/SubmittedChallenge");
 const HttpError = require("../models/HttpError");
 
 exports.startChallenge = async (req, res, next) => {
@@ -89,7 +90,6 @@ exports.CreateChallenge = async (req, res, next) => {
     xp,
     acceptableFiles,
     listOfSteps,
-    submissions: [],
   });
 
   try {
@@ -165,4 +165,50 @@ exports.getChallengeById = async (req, res, next) => {
   }
 
   res.json(challenge);
+};
+
+exports.submitChallenge = async (req, res, next) => {
+  const userId = req.params.userId;
+  const { title, github_url, site_url, description } = req.body;
+
+  const createdSubmittedChallenge = new SubmittedChallenge({
+    title,
+    github_url,
+    site_url,
+    description,
+    submitter: userId,
+  });
+
+  let user;
+  try {
+    user = await User.findById(userId);
+  } catch (err) {
+    const error = new HttpError(
+      "Submitting challenge failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError("Could not find user.", 404);
+    return next(error);
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdSubmittedChallenge.save({ session: sess });
+    user.submittedChallenges.push(createdSubmittedChallenge);
+    await user.save({ session: sess });
+    await sess.commitTransaction();
+  } catch (err) {
+    const error = new HttpError(
+      "Creating challenge sess failed, please try again.",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(201).json({ submittedCh: createdSubmittedChallenge });
 };
