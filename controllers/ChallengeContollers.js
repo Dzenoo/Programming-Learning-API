@@ -3,6 +3,7 @@ const Challenge = require("../models/Challenge");
 const User = require("../models/user");
 const SubmittedChallenge = require("../models/SubmittedChallenge");
 const HttpError = require("../models/HttpError");
+const mongoose = require("mongoose");
 
 exports.startChallenge = async (req, res, next) => {
   const userId = req.params.uId;
