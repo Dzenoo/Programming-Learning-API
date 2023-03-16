@@ -16,8 +16,6 @@ router.get("/", GetChallenges);
 
 router.get("/submittedChallenges", GetSubmittedChallenges);
 
-router.get("/:cId", getChallengeById);
-
 router.post(
   "/create",
   [
@@ -31,7 +29,9 @@ router.post(
 
 router.delete("/:cid", DeleteChallenge);
 
-// router.use(checkAuth);
+router.use(checkAuth);
+
+router.get("/:cId", getChallengeById);
 
 router.post("/submit", submitChallenge);
 
