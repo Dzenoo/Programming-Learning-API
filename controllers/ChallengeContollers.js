@@ -169,7 +169,7 @@ exports.getChallengeById = async (req, res, next) => {
 };
 
 exports.submitChallenge = async (req, res, next) => {
-  const { title, github, site, description, submitter } = req.body;
+  const { title, github, site, description, submitter, challengeId } = req.body;
 
   const createdSubmittedChallenge = new SubmittedChallenge({
     title,
@@ -178,6 +178,14 @@ exports.submitChallenge = async (req, res, next) => {
     description,
     submitter,
   });
+
+  let challenge;
+  try {
+    challenge = await Challenge.findById(challengeId);
+  } catch (err) {
+    const error = new HttpError(" Not found ch", 404);
+    return next(error);
+  }
 
   let user;
   try {
@@ -195,12 +203,29 @@ exports.submitChallenge = async (req, res, next) => {
     return next(error);
   }
 
+  user.xp += challenge.xp;
+
+  if (user.xp >= 20 && user.xp < 40) {
+    user.level = 1;
+  } else if (user.xp >= 40 && user.xp < 60) {
+    user.level = 2;
+  } else if (user.xp >= 60 && user.xp < 80) {
+    user.level = 3;
+  } else if (user.xp >= 80 && user.xp < 100) {
+    user.level = 4;
+  } else if (user.xp >= 100 && user.xp < 120) {
+    user.level = 5;
+  } else if (user.xp >= 120 && user.xp < 140) {
+    user.level = 6;
+  } else if (user.xp >= 140 && user.xp < 160) {
+    user.level = 7;
+  }
+
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
     await createdSubmittedChallenge.save({ session: sess });
     user.submittedChallenges.push(createdSubmittedChallenge);
-    user.level = ch;
     await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
