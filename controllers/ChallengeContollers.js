@@ -169,26 +169,19 @@ exports.getChallengeById = async (req, res, next) => {
 };
 
 exports.submitChallenge = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(
-      new HttpError("Invalid inputs passed, please check your data.", 422)
-    );
-  }
-
-  const { title, github_url, site_url, description } = req.body;
+  const { title, github, site, description, submitter } = req.body;
 
   const createdSubmittedChallenge = new SubmittedChallenge({
     title,
-    github_url,
-    site_url,
+    github,
+    site,
     description,
-    submitter: req.userData.userId,
+    submitter,
   });
 
   let user;
   try {
-    user = await User.findById(req.userData.userId);
+    user = await User.findById(submitter);
   } catch (err) {
     const error = new HttpError(
       "Submitting challenge failed, please try again.",
@@ -217,5 +210,5 @@ exports.submitChallenge = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ submittedCh: createdSubmittedChallenge });
+  res.status(201).json({ submittedChallenge: createdSubmittedChallenge });
 };
