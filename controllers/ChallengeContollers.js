@@ -165,7 +165,7 @@ exports.getChallengeById = async (req, res, next) => {
     return next(error);
   }
 
-  res.json(challenge);
+  res.json({ challenge });
 };
 
 exports.submitChallenge = async (req, res, next) => {
@@ -211,4 +211,18 @@ exports.submitChallenge = async (req, res, next) => {
   }
 
   res.status(201).json({ submittedChallenge: createdSubmittedChallenge });
+};
+
+exports.GetSubmittedChallenges = async (req, res, next) => {
+  let submittedChallenges;
+  try {
+    submittedChallenges = await SubmittedChallenge.find().populate("submitter");
+  } catch (err) {
+    const error = new HttpError("Dont have challenges please try again.", 500);
+    return next(error);
+  }
+
+  res.json({
+    submittedChallenges,
+  });
 };
