@@ -165,7 +165,7 @@ exports.getChallengeById = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ challenge });
+  res.json(challenge);
 };
 
 exports.submitChallenge = async (req, res, next) => {
@@ -200,6 +200,7 @@ exports.submitChallenge = async (req, res, next) => {
     sess.startTransaction();
     await createdSubmittedChallenge.save({ session: sess });
     user.submittedChallenges.push(createdSubmittedChallenge);
+    user.level = ch;
     await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
