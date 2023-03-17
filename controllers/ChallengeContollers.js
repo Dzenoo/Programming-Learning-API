@@ -205,20 +205,12 @@ exports.submitChallenge = async (req, res, next) => {
 
   user.xp += challenge.xp;
 
-  if (user.xp >= 20 && user.xp < 40) {
-    user.level = 1;
-  } else if (user.xp >= 40 && user.xp < 60) {
-    user.level = 2;
-  } else if (user.xp >= 60 && user.xp < 80) {
-    user.level = 3;
-  } else if (user.xp >= 80 && user.xp < 100) {
-    user.level = 4;
-  } else if (user.xp >= 100 && user.xp < 120) {
-    user.level = 5;
-  } else if (user.xp >= 120 && user.xp < 140) {
-    user.level = 6;
-  } else if (user.xp >= 140 && user.xp < 160) {
-    user.level = 7;
+  const levelUpPoints = 100;
+  const pointsNeddedForNextLevel = levelUpPoints + (user.level - 1) * 100;
+
+  if (user.xp >= pointsNeddedForNextLevel) {
+    const newLevel = user.level + 1;
+    user.level = newLevel;
   }
 
   try {
