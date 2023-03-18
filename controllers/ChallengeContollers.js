@@ -49,8 +49,8 @@ exports.startChallenge = async (req, res, next) => {
     return next(error);
   }
 
-  user.challenges.push(challenge);
   try {
+    user.challenges.push(challenge);
     await user.save();
   } catch (err) {
     const error = new HttpError(
@@ -72,6 +72,7 @@ exports.CreateChallenge = async (req, res, next) => {
   }
 
   const {
+    image,
     title,
     description,
     difficulty,
@@ -82,8 +83,7 @@ exports.CreateChallenge = async (req, res, next) => {
   } = req.body;
 
   const createdChallenge = new Challenge({
-    image:
-      "https://res.cloudinary.com/dzwb60tk1/image/upload/v1678370732/Screenshot_36_b96qtg.png",
+    image,
     title,
     description,
     difficulty,
