@@ -12,6 +12,7 @@ const UserSchema = new Schema({
   image: { type: String, required: true },
   level: { type: Number, required: true },
   xp: { type: Number, required: true },
+  achievements: [{ type: mongoose.Types.ObjectId, ref: "Achievement" }],
   challenges: [{ type: Schema.Types.ObjectId, ref: "Challenge" }],
   submittedChallenges: [
     { type: Schema.Types.ObjectId, required: true, ref: "SubmitChallenge" },
