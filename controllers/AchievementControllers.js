@@ -23,6 +23,7 @@ exports.CreateAchievement = async (req, res, next) => {
 
 exports.AddAchievement = async (req, res, next) => {
   const userId = req.params.uid;
+  const achievementName = req.query.name;
 
   let user;
   try {
@@ -32,13 +33,38 @@ exports.AddAchievement = async (req, res, next) => {
     return next(error);
   }
 
-  if (user.submittedChallenges.length === 1) {
-    const firstTimeUserAchievemt = await Achievement.findOne({
-      name: "First Time User",
-    });
-    if (firstTimeUserAchievemt) {
-      user.achievements.push(firstTimeUserAchievemt._id);
-      await user.save();
-    }
+  let achievement;
+  try {
+    achievement = await Achievement.findOne({ name: achievementName });
+  } catch (err) {
+    const error = new HttpError("Could not find achievement", 500);
+    return next(error);
   }
+
+  if (user.achievements.includes(achievement._id)) {
+    const error = new HttpError("Achievement already added", 400);
+    return next(error);
+  }
+
+  user.achievements.push(achievement._id);
+  achievement.users.push(userId);
+  await user.save();
+  await achievement.save();
+  res.status(201).json({ message: "Achievement added" });
+};
+
+exports.GetUserAchievements = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  let user;
+  try {
+    user = await User.findById(userId).populate("achievements");
+  } catch (err) {
+    const error = new HttpError("Could not find user", 404);
+    return next(error);
+  }
+
+  res.json({
+    achievements: user.achievements.map((a) => a.toObject({ getters: true })),
+  });
 };

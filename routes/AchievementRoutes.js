@@ -7,4 +7,6 @@ router.post("/", AchievementControllers.CreateAchievement);
 
 router.post("/:uid/addAchievement", AchievementControllers.AddAchievement);
 
+router.get("/:uid", AchievementControllers.GetUserAchievements);
+
 module.exports = router;
