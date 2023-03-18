@@ -29,7 +29,7 @@ router.post(
 
 router.delete("/:cid", DeleteChallenge);
 
-router.use(checkAuth);
+// router.use(checkAuth);
 
 router.get("/:cId", getChallengeById);
 
