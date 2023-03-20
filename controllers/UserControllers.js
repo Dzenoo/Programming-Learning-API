@@ -170,3 +170,18 @@ exports.getProfile = async (req, res, next) => {
 
   res.json({ user });
 };
+
+exports.GetUsers = async (req, res, next) => {
+  let users;
+  try {
+    users = await User.find();
+  } catch (err) {
+    const error = new HttpError(
+      "Could not find users, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  res.status(200).json({ users });
+};

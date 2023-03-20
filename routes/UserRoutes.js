@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.get("/:userId/profile", UserControllers.getProfile);
 
+router.get("/", UserControllers.GetUsers);
+
 router.post(
   "/signup",
   [
