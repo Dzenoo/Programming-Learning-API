@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const HttpError = require("../models/HttpError");
+const Comment = require("../models/Comment");
 
 exports.signup = async (req, res, next) => {
   const errors = validationResult(req);
@@ -184,4 +185,43 @@ exports.GetUsers = async (req, res, next) => {
   }
 
   res.status(200).json({ users });
+};
+
+exports.NewComment = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  const { title, message } = req.body;
+
+  const createdComment = new Comment({
+    title,
+    message,
+    user: userId,
+  });
+
+  try {
+    await createdComment.save();
+  } catch (err) {
+    const error = new HttpError(
+      "Could not create comment, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  res.json({ message: "Comment Created" });
+};
+
+exports.GetComments = async (req, res, next) => {
+  let comments;
+  try {
+    comments = await Comment.find().populate("user");
+  } catch (err) {
+    const error = new HttpError(
+      "Could not get comments, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  res.json({ comments });
 };

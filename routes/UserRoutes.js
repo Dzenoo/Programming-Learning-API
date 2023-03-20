@@ -7,6 +7,10 @@ router.get("/:userId/profile", UserControllers.getProfile);
 
 router.get("/", UserControllers.GetUsers);
 
+router.post("/:uid/newComment", UserControllers.NewComment);
+
+router.get("/getComments", UserControllers.GetComments);
+
 router.post(
   "/signup",
   [
