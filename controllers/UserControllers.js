@@ -71,7 +71,7 @@ exports.signup = async (req, res, next) => {
         userId: createdUser.id,
         email: createdUser.email,
       },
-      "stringshow",
+      process.env.JWT,
       { expiresIn: "1h" }
     );
   } catch (err) {
@@ -135,7 +135,7 @@ exports.login = async (req, res, next) => {
         userId: existingUser.id,
         email: existingUser.email,
       },
-      "stringshow",
+      process.env.JWT,
       { expiresIn: "1h" }
     );
   } catch (err) {

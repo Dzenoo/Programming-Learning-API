@@ -32,7 +32,6 @@ exports.AddAchievement = async (req, res, next) => {
     const error = new HttpError("Could not create achievement", 500);
     return next(error);
   }
-
   let achievement;
   try {
     achievement = await Achievement.findOne({ name: achievementName });
